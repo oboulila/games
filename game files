@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RETRO ARCADE HUB — 28+ GAMES</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: #0b0d14;
+    color: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(90deg, #131726 0%, #1d233a 100%);
+    border-bottom: 3px solid #ffbe0b;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  }
+  .logo {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 15px;
+    color: #ffbe0b;
+    text-shadow: 2px 2px 0 #000;
+    letter-spacing: 1px;
+  }
+  .logo span { color: #3a86ff; }
+  .search-bar {
+    background: #0b0d14;
+    border: 2px solid #334155;
+    color: #fff;
+    padding: 9px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 260px;
+    outline: none;
+  }
+  .search-bar:focus { border-color: #ffbe0b; }
+
+  /* Category Filter Bar */
+  .category-bar {
+    background: #111420;
+    padding: 12px 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-bottom: 1px solid #1e293b;
+  }
+  .cat-btn {
+    background: #1c2237;
+    color: #cbd5e1;
+    border: 1px solid #334155;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .cat-btn:hover, .cat-btn.active {
+    background: #ffbe0b;
+    color: #0b0d14;
+    border-color: #ffbe0b;
+  }
+
+  /* Main Container */
+  main {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 20px;
+    flex: 1;
+  }
+
+  /* Active Game Viewport */
+  #player-section {
+    display: none;
+    background: #131726;
+    border: 3px solid #3a86ff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85);
+  }
+  #player-header {
+    background: #1a2035;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #2b3554;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  #active-game-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: #ffbe0b;
+  }
+  .player-controls {
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    background: #2b3554;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.15s;
+    text-decoration: none;
+  }
+  .btn:hover { background: #3a86ff; }
+  .btn-close { background: #dc2626; }
+  .btn-close:hover { background: #ef4444; }
+
+  #iframe-wrapper {
+    position: relative;
+    width: 100%;
+    height: 620px;
+    background: #000;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* Section Header */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  #game-count {
+    font-size: 12px;
+    color: #ffbe0b;
+    font-weight: 700;
+  }
+
+  /* Game Grid */
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+    gap: 18px;
+  }
+  .game-card {
+    background: #151929;
+    border: 2px solid #262e47;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .game-card:hover {
+    transform: translateY(-5px);
+    border-color: #ffbe0b;
+    box-shadow: 0 8px 25px rgba(255, 190, 11, 0.2);
+  }
+  .card-banner {
+    height: 125px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    position: relative;
+  }
+  .tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.78);
+    color: #ffbe0b;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .card-body {
+    padding: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .card-desc {
+    font-size: 12.5px;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin-bottom: 14px;
+  }
+  .play-btn {
+    width: 100%;
+    background: #ffbe0b;
+    color: #0b0d14;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .game-card:hover .play-btn { background: #ffd147; }
+
+  footer {
+    text-align: center;
+    padding: 18px;
+    color: #64748b;
+    font-size: 12px;
+    border-top: 1px solid #1e293b;
+  }
+
+  @media (max-width: 600px) {
+    #iframe-wrapper { height: 460px; }
+    .logo { font-size: 12px; }
+    .search-bar { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">RETRO<span>ARCADE</span></div>
+  <input type="text" class="search-bar" id="search" placeholder="Search 28+ games..." onkeyup="applyFilters()">
+</header>
+
+<div class="category-bar">
+  <button class="cat-btn active" onclick="setCategory('ALL', this)">All Games</button>
+  <button class="cat-btn" onclick="setCategory('Sports', this)">🏈 Sports</button>
+  <button class="cat-btn" onclick="setCategory('Runner', this)">🏃 Runner</button>
+  <button class="cat-btn" onclick="setCategory('Arcade', this)">🕹️ Arcade</button>
+  <button class="cat-btn" onclick="setCategory('Action', this)">⚡ Action & Racing</button>
+  <button class="cat-btn" onclick="setCategory('Puzzle', this)">🧩 Puzzle & Sim</button>
+</div>
+
+<main>
+  <!-- Active Game Viewport -->
+  <section id="player-section">
+    <div id="player-header">
+      <div id="active-game-title">LOADING...</div>
+      <div class="player-controls">
+        <a class="btn" id="new-tab-link" href="#" target="_blank">↗ Open Tab</a>
+        <button class="btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+        <button class="btn btn-close" onclick="closeGame()">✕ Close</button>
+      </div>
+    </div>
+    <div id="iframe-wrapper">
+      <iframe id="game-frame" src="" allowfullscreen allow="autoplay; fullscreen; gamepad"></iframe>
+    </div>
+  </section>
+
+  <div class="section-header">
+    <div class="section-title">ARCADE LIBRARY</div>
+    <div id="game-count">28 GAMES</div>
+  </div>
+  <div class="game-grid" id="game-grid"></div>
+</main>
+
+<footer>
+  Retro Arcade Hub &bull; Click any game card to launch directly in your browser
+</footer>
+
+<script>
+const GAMES = [
+  // --- SPORTS ---
+  {
+    title: "Retro Bowl",
+    tag: "Sports",
+    icon: "🏈",
+    bg: "linear-gradient(135deg, #1b4332, #2d6a4f)",
+    desc: "Manage your franchise, draft stars, and throw touchdown passes in 8-bit football.",
+    url: "https://game316009.konggames.com/gamez/0031/6009/live/index.html"
+  },
+  {
+    title: "Retro Bowl College",
+    tag: "Sports",
+    icon: "🎓",
+    bg: "linear-gradient(135deg, #003566, #006494)",
+    desc: "Lead a college football program to the national championship.",
+    url: "https://3kh0-assets.silvereen.net/projects/retro-bowl/index.html"
+  },
+  {
+    title: "Basket Random",
+    tag: "Sports",
+    icon: "🏀",
+    bg: "linear-gradient(135deg, #d97706, #b45309)",
+    desc: "Chaotic one-button ragdoll basketball with changing courts and physics.",
+    url: "https://ubg77.github.io/edit/basket-random/"
+  },
+  {
+    title: "Soccer Random",
+    tag: "Sports",
+    icon: "⚽",
+    bg: "linear-gradient(135deg, #15803d, #166534)",
+    desc: "Wacky 2-player physics soccer with icy fields, beach balls, and huge goals.",
+    url: "https://ubg77.github.io/edit/soccer-random/"
+  },
+  {
+    title: "8 Ball Billiards",
+    tag: "Sports",
+    icon: "🎱",
+    bg: "linear-gradient(135deg, #065f46, #047857)",
+    desc: "Classic pool table showdown against AI or a friend.",
+    url: "https://ubg77.github.io/edit/8-ball-pool/"
+  },
+
+  // --- RUNNERS ---
+  {
+    title: "Subway Surfers",
+    tag: "Runner",
+    icon: "🛹",
+    bg: "linear-gradient(135deg, #2563eb, #db2777)",
+    desc: "Dash down the train tracks, dodge oncoming trains, and ride hoverboards.",
+    url: "https://ubg77.github.io/update/subway-surfers/"
+  },
+  {
+    title: "Temple Run 2",
+    tag: "Runner",
+    icon: "🗿",
+    bg: "linear-gradient(135deg, #78350f, #b45309)",
+    desc: "Sprint across crumbling cliffs, zip lines, and ancient temple ruins.",
+    url: "
